@@ -1,0 +1,4 @@
+#!/bin/bash
+
+set -exo pipefail
+exec ./gradlew run -q --console=plain --args="${STEP:-stepA_mal}" "${@}"
