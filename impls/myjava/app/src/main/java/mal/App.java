@@ -4,33 +4,47 @@
 package mal;
 
 import mal.step0_repl.Step0_REPL;
+import mal.step1_read_print.Step1_REPL;
 
 import java.util.Arrays;
 import java.util.Scanner;
 import java.util.function.Function;
 
 public class App {
-    public static String getGreeting() {
-        return "Welcome to MAL.";
-    }
+	public static String getGreeting() {
+		return "Welcome to MAL.";
+	}
 
-    public static void main(String[] args) {
-        startREPL();
-    }
+	public static void main(String[] args) {
+		System.out.println(Arrays.toString(args));
 
-    private static void startREPL() {
-        System.out.println(getGreeting());
-        Scanner scanner = new Scanner(System.in);
-        boolean running = true;
-        while (running) {
-            System.out.print("user> ");
-            String line = scanner.nextLine();
-            if (line.equals("exit")) {
-                running = false;
-            }
-            System.out.println(Step0_REPL.rep(line));
-        }
-        System.out.println("Exiting.");
-        scanner.close();
-    }
+		Function<String, String> stepZeroRepl = s -> Step0_REPL.rep(s);
+		Function<String, String> stepOneRepl = s -> Step1_REPL.rep(s);
+
+		switch (args[0]) {
+		case "step0_repl":
+			startREPL(stepZeroRepl);
+			break;
+		case "step1_read_print":
+			startREPL(stepOneRepl);
+			break;
+		}
+	}
+
+	private static void startREPL(Function<String, String> repl) {
+		System.out.println(getGreeting());
+		Scanner scanner = new Scanner(System.in);
+		boolean running = true;
+		while (running) {
+			System.out.print("user> ");
+			String line = scanner.nextLine();
+			if (line.equals("exit")) {
+				running = false;
+			}
+
+			System.out.println(repl.apply(line));
+		}
+		System.out.println("Exiting.");
+		scanner.close();
+	}
 }
